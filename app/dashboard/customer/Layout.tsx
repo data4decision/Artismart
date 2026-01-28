@@ -145,15 +145,15 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar
-        isCollapsed={isSidebarCollapsed}
-        onCollapseChange={setIsSidebarCollapsed}
-      />
+  <Sidebar
+  isCollapsed={isSidebarCollapsed}
+  toggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
+/>
 
       <div className="flex-1 flex flex-col">
         <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
           <h1 className="text-lg font-semibold sm:ml-0 ml-10">
-            {/* You can uncomment if needed: {displayName} */}
+            {/*  {displayName} */}
           </h1>
 
           <div className="relative" ref={dropdownRef}>
