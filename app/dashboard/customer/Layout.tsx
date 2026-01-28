@@ -213,8 +213,8 @@ export default function Layout({ children }: LayoutProps) {
 
         <main
           className={`
-            flex-1 p-6 w-full overflow-x-hidden transition-all duration-300
-            ${isSidebarCollapsed ? 'ml-10 sm:ml-20' : 'ml-[260px] sm:ml-[260px]'}
+            flex-1 p-6 w-[89%]  transition-all duration-300
+            ${isSidebarCollapsed ? 'ml-12' : 'ml-40'}
           `}
         >
           {children}
