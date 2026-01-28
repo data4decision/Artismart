@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react'
-import Sidebar from './Sidebar'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaCaretDown, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'
 import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import CustomerSidebar from './CustomerSidebar'
 
 interface Profile {
   full_name: string | null
@@ -17,50 +18,49 @@ interface Profile {
   lga?: string | null
 }
 
-interface LayoutProps {
-  children: React.ReactNode
-}
-
-export default function Layout({ children }: LayoutProps) {
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Mobile detection
-  const [isMobile, setIsMobile] = useState(false)
+  // -----------------------------------------------------------------
+  // Mobile detection & sidebar collapse 
+  // -----------------------------------------------------------------
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024
+      setIsSidebarCollapsed(mobile)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const fetchProfile = async () => {
     try {
       setIsLoading(true)
 
-      // 1. Get current authenticated user (has email reliably)
       const { data: { user }, error: authError } = await supabase.auth.getUser()
 
       if (authError || !user) {
         console.warn('No authenticated user found')
-        setProfile(null)
+        router.replace('/login')
         return
       }
 
       const email = user.email ?? 'No email'
 
-      console.log('Auth user:', { id: user.id, email })
-
-      // 2. Try to fetch profile row from 'profiles' table
       const { data: profileRow, error: profileError } = await supabase
         .from('profiles')
         .select('first_name, last_name, role, phone, residential_address, state, lga')
         .eq('id', user.id)
-        .maybeSingle()   // Use .maybeSingle() instead of .single() to avoid error on no row
+        .maybeSingle()
 
       let fullName = 'User'
       let role: string | null = null
@@ -74,7 +74,6 @@ export default function Layout({ children }: LayoutProps) {
       }
 
       if (profileRow) {
-        console.log('Profile row found:', profileRow)
         fullName = [profileRow.first_name, profileRow.last_name]
           .filter(Boolean)
           .join(' ')
@@ -85,9 +84,6 @@ export default function Layout({ children }: LayoutProps) {
         residential_address = profileRow.residential_address ?? null
         state = profileRow.state ?? null
         lga = profileRow.lga ?? null
-      } else {
-        console.log('No profile row found in DB for user', user.id)
-        // You might want to auto-create profile here in real app
       }
 
       setProfile({
@@ -108,10 +104,8 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   useEffect(() => {
-    // Initial fetch
     fetchProfile()
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         fetchProfile()
@@ -122,7 +116,7 @@ export default function Layout({ children }: LayoutProps) {
     })
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [router])
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -137,23 +131,38 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    window.location.href = '/login'
+    router.push('/login')
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      setIsSidebarCollapsed(mobile);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
 
   const displayName = isLoading ? 'Loading...' : profile?.full_name || 'User'
   const displayEmail = isLoading ? 'Loading...' : profile?.email || 'No email provided'
 
   return (
     <div className="flex min-h-screen">
-  <Sidebar
-  isCollapsed={isSidebarCollapsed}
-  toggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
-/>
+      <CustomerSidebar onCollapseChange={setIsSidebarCollapsed} />
 
-      <div className="flex-1 flex flex-col">
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden ${
+          isSidebarCollapsed ? 'lg:ml-13' : 'lg:ml-44'
+        }`}
+      >
+        {/* Header */}
         <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
           <h1 className="text-lg font-semibold sm:ml-0 ml-10">
-            {/*  {displayName} */}
+            {/* {displayName} */}
           </h1>
 
           <div className="relative" ref={dropdownRef}>
@@ -211,15 +220,13 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </header>
 
-        <main
-          className={`
-            flex-1 p-6 w-[89%]  transition-all duration-300
-            ${isSidebarCollapsed ? 'ml-12' : 'ml-40'}
-          `}
-        >
+        {/* Main Content */}
+        <main className="flex-1 ml-10 sm:ml-0 p-6 w-full overflow-x-hidden bg-white text-gray-900">
           {children}
         </main>
       </div>
     </div>
   )
 }
+
+export default Layout
