@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --blue:     #0b0b5c;
+  --orange:   #f47b20;
+  --black:    #000000;
+  --white:    #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    
+    /* Usually brand colors stay the same in dark mode */
+    --blue:   #0b0b5c;
+    --orange: #f47b20;
+    --black:  #000000;
+    --white:  #ffffff;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+.slick-list {
+  overflow: hidden !important;   
+  margin: 0 -10px;               
+}
+
+.slick-slide > div {
+  padding: 0 10px;               
+}
+
+@media (max-width: 480px) {
+  .slick-slide > div {
+    padding: 0 6px;
+  }
+}
+
+
+html, body {
+  overflow-x: hidden;
 }
