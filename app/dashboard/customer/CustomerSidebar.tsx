@@ -18,6 +18,8 @@ import {
   FaSignOutAlt,
   FaChevronCircleRight,
   FaChevronCircleLeft,
+  FaTimes,
+  FaBars,
 } from 'react-icons/fa'
 
 // Logout handler
@@ -32,9 +34,11 @@ interface CustomerSidebarProps {
 
 const CustomerSidebar = ({ onCollapseChange }: CustomerSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
   const isActive = (href: string) => pathname === href
+  
 
   const nav = [
     { label: 'Dashboard', href: '/dashboard/customer', icon: FaTachometerAlt },
@@ -73,6 +77,7 @@ const CustomerSidebar = ({ onCollapseChange }: CustomerSidebarProps) => {
   }
 
   return (
+    <div className="">
     <aside
       className={`fixed top-0 left-0 h-screen bg-[var(--blue)] text-[var(--white)] flex flex-col z-40 transition-all duration-300 ${isCollapsed ? 'w-13' : 'w-48'}`}
       aria-label="Customer sidebar"
@@ -126,6 +131,14 @@ const CustomerSidebar = ({ onCollapseChange }: CustomerSidebarProps) => {
         {isCollapsed ? <FaChevronCircleRight /> : <FaChevronCircleLeft />}
       </button>
     </aside>
+
+    <div className="min-h-screen">
+      <button className="md:hidden top-8 right-8"
+      onClick={()=> setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        {isMobileMenuOpen ? <FaTimes size={18}/> : <FaBars size={18}/> }
+      </button>
+    </div>
+    </div>
   )
 }
 

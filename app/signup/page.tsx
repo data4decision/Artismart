@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabase';  
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
+import Link from 'next/link'
 
 type Step = 'role' | 'form' | 'success';
 
@@ -177,6 +178,8 @@ export default function SignUp() {
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-[var(--blue)] px-4 py-8 rounded-lg">
         <div>
+          <p className=""><Link href="/" className="text-[var(--white)] flex items-center gap-2 text-sm"><FaArrowLeft size={20} className='text-[var(--white)]'/>
+                  <span>Back</span></Link></p>
           <h1 className="w-[50%] mx-auto mt-6 text-center text-3xl font-extrabold bg-[var(--white)] text-[var(--blue)] border-2 border-[var(--orange)] rounded-2xl p-2">
             Artismart
           </h1>

@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { FaArrowLeft } from 'react-icons/fa';
 
 export default function Login() {
   const router = useRouter();
@@ -71,7 +72,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)] py-12 px-4 sm:px-6 lg:px-8">
+      
       <div className="max-w-md w-full space-y-8 bg-[var(--blue)] px-2 py-2 rounded-lg">
+        <p className=""><Link href="/" className="text-[var(--white)] flex items-center gap-2 text-sm"><FaArrowLeft size={20} className='text-[var(--white)]'/>
+        <span>Back</span></Link></p>
         <div>
           <h1 className=' w-[50%] m-auto mt-6 text-center text-3xl font-extrabold bg-[var(--white)] text-[var(--blue)] border-2 border-[var(--orange)] rounded-2xl'>Artismart</h1>
           <h2 className="mt-6 text-center text-2xl font-bold text-[var(--white)]">

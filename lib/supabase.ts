@@ -1,4 +1,4 @@
-// lib/supabase.ts
+
 import { createClient } from '@supabase/supabase-js';
 
 // For client-side (browser) usage – use NEXT_PUBLIC_ vars
