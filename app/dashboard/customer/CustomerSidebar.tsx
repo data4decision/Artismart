@@ -53,9 +53,7 @@ const CustomerSidebar = ({ onCollapseChange }: CustomerSidebarProps) => {
     { label: 'Support', href: '/dashboard/customer/support', icon: FaLifeRing },
   ]
 
-  // -----------------------------------------------------------------
-  // Mobile / Collapse handling (EXACTLY same as NutritionSidebar)
-  // -----------------------------------------------------------------
+  
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 1024
