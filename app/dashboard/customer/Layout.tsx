@@ -256,7 +256,7 @@ import React, { useState } from 'react'
 import CustomerSidebar from '@/app/dashboard/customer/CustomerSidebar'
 
 
-const Layout = () => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
@@ -265,16 +265,21 @@ const Layout = () => {
     <div>
       <div className="flex min-h-screen">
         <CustomerSidebar onCollapseChange={setIsSidebarCollapsed}/>
-
-        <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
-          <div
+         <div
         className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden ${
           isSidebarCollapsed ? 'lg:ml-13' : 'lg:ml-44'
         }`}
       >
-        </div>
+
+        <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
+      
+       
         </header>
+         <main className="flex-1 ml-10 sm:ml-0 p-6 w-full overflow-x-hidden bg-white text-gray-900">
+          {children}
+        </main>
       </div>
+    </div>
     </div>
   )
 }
