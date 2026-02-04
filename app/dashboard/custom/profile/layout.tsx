@@ -11,14 +11,14 @@ import {
 } from 'react-icons/fa'
 
 const navItems = [
-  { label: 'Profile Information', href: '/dashboard/customer/profile' },
-  { label: 'Account Login Details', href: '/dashboard/customer/profile/account-login' },
-  { label: 'Account Preferences', href: '/profile/customer/artisans' },
-  { label: 'Security & Privacy', href: '/profile/customer/bookings' },
-  { label: 'Saved Artisans / Favorites', href: '/profile/customer/requests' },
-  { label: 'Payment Information', href: '/profile/customer/messages' },
-  { label: 'Account Status', href: '/profile/customer/payments' },
-  { label: 'Account Actions', href: '/profile/customer/reviews' },
+  { label: 'Profile Information', href: '/dashboard/custom/profile' },
+  { label: 'Account Login Details', href: '/dashboard/custom/profile/account-login' },
+  { label: 'Account Preferences', href: '/profile/custom/artisans' },
+  { label: 'Security & Privacy', href: '/profile/custom/bookings' },
+  { label: 'Saved Artisans / Favorites', href: '/profile/custom/requests' },
+  { label: 'Payment Information', href: '/profile/custom/messages' },
+  { label: 'Account Status', href: '/profile/custom/payments' },
+  { label: 'Account Actions', href: '/profile/custom/reviews' },
 ]
 
 interface DashboardLayoutProps {
