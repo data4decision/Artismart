@@ -1,12 +1,11 @@
 'use client'
-
-import React, { useRef, useState, useEffect } from 'react'
+import React, {useState, useRef, useEffect} from 'react'
+import Sidebar from './Sidebar'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaCaretDown, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'
-import { supabase } from '@/lib/supabase'
+import {FaCaretDown, FaCog, FaSignOutAlt, FaUser} from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
-import Sidebar from './Sidebar'
+import { supabase } from '@/lib/supabase'
 
 interface Profile {
   full_name: string | null
@@ -16,33 +15,39 @@ interface Profile {
   residential_address?: string | null
   state?: string | null
   lga?: string | null
-  profile_image?: string | null   // ← added
+  profile_image?: string | null  
+} 
+
+interface DashboardLayoutProps {
+  children: React.ReactNode
 }
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter()
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
-  const dropdownRef = useRef<HTMLDivElement>(null)
+    const router = useRouter()
+   const [profile, setProfile] = useState<Profile | null>(null)
+   const [isLoading, setIsLoading] = useState(true)
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  // Mobile detection & sidebar collapse
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
+    // Close dropdown on outside click
   useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 1024
-      setIsMobile(mobile)
-      setIsSidebarCollapsed(mobile)
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false)
+      }
     }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const fetchProfile = async () => {
+  const handleLogout = async () => {
+     await supabase.auth.signOut()
+     router.push('/login')
+   }
+
+   const fetchProfile = async () => {
     try {
       setIsLoading(true)
 
@@ -144,43 +149,23 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [router])
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
-
-  const displayName = isLoading ? 'Loading...' : profile?.full_name || 'User'
+    const displayName = isLoading ? 'Loading...' : profile?.full_name || 'User'
   const displayEmail = isLoading ? 'Loading...' : profile?.email || 'No email provided'
   const avatarUrl = profile?.profile_image || '/default-avatar.png'
-
   return (
-    <div className="flex min-h-screen">
-      <Sidebar onCollapseChange={setIsSidebarCollapsed} />
+    <div className="font-roboto">
+        <div className="flex min-h-screen">
+      
+        <Sidebar />
+        <div
+        className='flex-1 flex flex-col  overflow-x-hidden'>
+            <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
+           <h1 className="text-lg font-semibold sm:ml-0 ml-10">
+             {/* {displayName} */}
+           </h1>
 
-      <div
-        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden ${
-          isSidebarCollapsed ? 'lg:ml-13' : 'lg:ml-44'
-        }`}
-      >
-        {/* Header */}
-        <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
-          <h1 className="text-lg font-semibold sm:ml-0 ml-10">
-            {/* {displayName} */}
-          </h1>
-
-          <div className="relative" ref={dropdownRef}>
-            <button
+           <div className="relative" ref={dropdownRef}>
+             <button
               className="flex items-center gap-2 hover:bg-[var(--orange)]/90 p-2 rounded-md transition-colors"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               aria-label="User profile"
@@ -192,11 +177,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   fill
                   className="object-cover"
                   sizes="32px"
-                  priority // small avatar – better to load fast
+                  priority 
                 />
               </div>
 
-              {!isMobile && <span className="text-sm font-medium">{displayName}</span>}
+               <span className="text-sm font-medium">{displayName}</span>
 
               <FaCaretDown
                 className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
@@ -239,15 +224,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </div>
             )}
           </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="flex-1 ml-10 sm:ml-0 p-6 w-full overflow-x-hidden bg-white text-gray-900">
+           </header>
+        <main className="flex-1 p-4 md:p-6 lg:p-8 ">
+          {/* Spacer for mobile header area */}
+          <div className="md:hidden h-16" />
           {children}
         </main>
+        </div>
       </div>
     </div>
   )
 }
-
-export default Layout

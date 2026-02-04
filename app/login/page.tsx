@@ -56,7 +56,7 @@ export default function Login() {
 
       // Redirect to correct dashboard
       if (role === 'artisan') {
-        router.push('/dashboard/artisan');
+        router.push('/dashboard/artisans');
       } else {
         router.push('/dashboard/custom');
       }
