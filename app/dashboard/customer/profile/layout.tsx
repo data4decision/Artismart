@@ -1,4 +1,4 @@
-'use client'  // ← Add this line here (must be first, before any imports or code)
+'use client'
 
 import React, { useState } from 'react'
 import Link from 'next/link'
@@ -41,41 +41,43 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Mobile hamburger button */}
       <button
-        className="md:hidden fixed top-4 right-4 z-50 bg-white p-3 rounded-full shadow-lg border border-gray-200"
+        className="md:hidden  top-8 right-12 z-50 bg-white p-2 rounded-lg shadow-md"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label="Toggle menu"
       >
-        {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+        {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
       </button>
 
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] min-h-screen">
         {/* Sidebar – fixed on desktop, drawer on mobile */}
         <aside
           className={`
-            fixed md:static inset-y-0 left-0 z-40 w-64 md:w-72 bg-white border-r border-gray-200
+            fixed md:static inset-y-0 left-0 z-40 w-52 bg-[var(--white)] border-[var(--blue)] hover:border-[var(--blue)] text-[var(--blue)]
             transform transition-transform duration-300 ease-in-out
             ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
             md:translate-x-0
           `}
         >
-          <nav className="mt-16 md:mt-6 px-3">
-            <ul className="space-y-1.5">
-              {navItems.map(({ href, label, icon: Icon }) => (
+          {/* <div className="p-6 border-b border-orange-600">
+            <h2 className="text-xl font-bold">Menu</h2>
+          </div> */}
+
+          <nav className="mt-4 px-3">
+            <ul className="space-y-1">
+              {navItems.map(({ href,  label }) => (
                 <li key={href}>
                   <Link
                     href={href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => setIsMobileMenuOpen(false)} 
                     className={`
-                      flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-200 text-[15px]
-                      ${
-                        isActive(href)
-                          ? 'bg-orange-50 text-orange-700 font-medium shadow-sm border border-orange-200'
-                          : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
-                      }
+                      flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm
+                      ${isActive(href)
+                        ? 'bg-[var(--orange)]/20 font-semibold border border-[var(--orange)]'
+                        : 'hover:bg-[var(--blue)]/10 border border-[var(--blue)]'}
                     `}
                   >
-                    {Icon && <Icon className="text-lg shrink-0 opacity-80" />}
-                    <span className="truncate">{label}</span>
+                    {/* <Icon className="text-lg shrink-0" /> */}
+                    <span>{label}</span>
                   </Link>
                 </li>
               ))}
@@ -85,7 +87,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Main content area */}
         <main className="flex-1 p-4 md:p-6 lg:p-8">
-          {/* Spacer for mobile header area */}
+          {/* Optional top padding for mobile when menu is closed */}
           <div className="md:hidden h-16" />
           {children}
         </main>
@@ -94,7 +96,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Overlay when mobile menu is open */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/40 z-30 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
