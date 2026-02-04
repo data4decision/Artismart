@@ -252,34 +252,23 @@
 
 // export default Layout
 
-import React from 'react'
-import CustomerSidebar from '@/app/dashboard/customer/CustomerSidebar'
+import CustomerSidebar from './CustomerSidebar'
 
+interface DashboardLayoutProps {
+  children: React.ReactNode
+}
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-
-
-
-  
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div>
-      <div className="flex min-h-screen">
+    <div className="min-h-screen bg-gray-50">
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] min-h-screen">
         <CustomerSidebar />
-         <div
-        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden `}
-      >
-
-        <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
-      
-       
-        </header>
-         <main className="flex-1 ml-10 sm:ml-0 p-6 w-full overflow-x-hidden bg-white text-gray-900">
+        <main className="flex-1 p-4 md:p-6 lg:p-8">
+          {/* Spacer for mobile header area */}
+          <div className="md:hidden h-16" />
           {children}
         </main>
       </div>
     </div>
-    </div>
   )
 }
-
-export default Layout
