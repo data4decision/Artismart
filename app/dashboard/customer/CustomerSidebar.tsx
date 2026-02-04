@@ -53,29 +53,25 @@ const CustomerSidebar = ({ onCollapseChange }: CustomerSidebarProps) => {
     { label: 'Support', href: '/dashboard/customer/support', icon: FaLifeRing },
   ]
 
+
+useEffect(() => {
+  const handleResize = () => {
+    if (typeof window === 'undefined') return; 
+
+    const mobile = window.innerWidth < 1024;
+    setIsCollapsed(mobile);
+    onCollapseChange(mobile);
+  };
+
   
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 1024
-      setIsCollapsed(mobile)           // auto-collapse on mobile
-      onCollapseChange(mobile)         // sync with parent Layout
-    }
+  handleResize(); 
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [onCollapseChange])
-
-  const toggleCollapse = () => {
-    setIsCollapsed(prev => {
-      const newState = !prev
-      onCollapseChange(newState)
-      return newState
-    })
-  }
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, [onCollapseChange]);
 
   return (
-    <div className="">
+    <div className="font-roboto">
     <aside
       className={`fixed top-0 left-0 h-screen bg-[var(--blue)] text-[var(--white)] flex flex-col z-40 transition-all duration-300 ${isCollapsed ? 'w-13' : 'w-48'}`}
       aria-label="Customer sidebar"
