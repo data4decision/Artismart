@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link'
@@ -89,7 +89,6 @@ export default function ResetPassword() {
     }
 
     setLoading(true);
-     const { supabase } = await import('@/lib/supabase')
 
     try {
       const { error } = await supabase.auth.updateUser({

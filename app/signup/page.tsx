@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-
+import { supabase } from '@/lib/supabase';  
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
@@ -116,7 +116,6 @@ export default function SignUp() {
     const emailToUse = formData.email.trim().toLowerCase();
 
     setLoading(true);
-     const { supabase } = await import('@/lib/supabase')
 
     try {
       // 1. Sign up with Supabase Auth

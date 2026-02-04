@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -44,8 +44,6 @@ export default function Login() {
       }
 
       toast.success('Login successful! Redirecting...');
-      
-      const { supabase } = await import('@/lib/supabase')
 
       // Get role from profiles table (fallback to metadata or default to customer)
       const { data: profile } = await supabase
