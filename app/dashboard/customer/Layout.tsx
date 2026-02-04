@@ -251,24 +251,22 @@
 // }
 
 // export default Layout
-'use client'
-import React, { useState } from 'react'
+
+import React from 'react'
 import CustomerSidebar from '@/app/dashboard/customer/CustomerSidebar'
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+
 
   
   return (
     <div>
       <div className="flex min-h-screen">
-        <CustomerSidebar onCollapseChange={setIsSidebarCollapsed}/>
+        <CustomerSidebar />
          <div
-        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden ${
-          isSidebarCollapsed ? 'lg:ml-13' : 'lg:ml-44'
-        }`}
+        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden `}
       >
 
         <header className="h-16 flex items-center justify-between px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm w-full">
