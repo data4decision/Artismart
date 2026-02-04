@@ -30,7 +30,7 @@ const navItems = [
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
-
+export const dynamic = 'force-dynamic'
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -103,3 +103,4 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     </div>
   )
 }
+
