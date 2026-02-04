@@ -271,7 +271,7 @@ const ProfilePage = () => {
     return (
       <div className="max-w-2xl mx-auto text-center py-16">
         <h2 className="text-2xl font-bold text-[var(--blue)] mb-4">
-          Welcome! Let's set up your profile
+          Welcome! Lets set up your profile
         </h2>
         <p className="text-[var(--blue)] mb-8 max-w-md mx-auto">
           Click <span className="font-bold">Edit Profile</span> below to add your information.

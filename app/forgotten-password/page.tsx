@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -10,6 +10,8 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function ForgotPassword() {
     }
 
     setLoading(true);
+     const { supabase } = await import('@/lib/supabase')
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(
