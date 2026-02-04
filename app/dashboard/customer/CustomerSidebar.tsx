@@ -53,25 +53,29 @@ const CustomerSidebar = ({ onCollapseChange }: CustomerSidebarProps) => {
     { label: 'Support', href: '/dashboard/customer/support', icon: FaLifeRing },
   ]
 
-
-useEffect(() => {
-  const handleResize = () => {
-    if (typeof window === 'undefined') return; 
-
-    const mobile = window.innerWidth < 1024;
-    setIsCollapsed(mobile);
-    onCollapseChange(mobile);
-  };
-
   
-  handleResize(); 
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024
+      setIsCollapsed(mobile)           // auto-collapse on mobile
+      onCollapseChange(mobile)         // sync with parent Layout
+    }
 
-  window.addEventListener('resize', handleResize);
-  return () => window.removeEventListener('resize', handleResize);
-}, [onCollapseChange]);
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [onCollapseChange])
+
+  const toggleCollapse = () => {
+    setIsCollapsed(prev => {
+      const newState = !prev
+      onCollapseChange(newState)
+      return newState
+    })
+  }
 
   return (
-    <div className="font-roboto">
+    <div className="">
     <aside
       className={`fixed top-0 left-0 h-screen bg-[var(--blue)] text-[var(--white)] flex flex-col z-40 transition-all duration-300 ${isCollapsed ? 'w-13' : 'w-48'}`}
       aria-label="Customer sidebar"
@@ -126,12 +130,12 @@ useEffect(() => {
       </button>
     </aside>
 
-    <div className="min-h-screen">
+    {/* <div className="min-h-screen">
       <button className="md:hidden top-8 right-8"
       onClick={()=> setIsMobileMenuOpen(!isMobileMenuOpen)}>
         {isMobileMenuOpen ? <FaTimes size={18}/> : <FaBars size={18}/> }
       </button>
-    </div>
+    </div> */}
     </div>
   )
 }
