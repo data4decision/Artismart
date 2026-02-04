@@ -16,7 +16,6 @@ interface Profile {
   residential_address?: string | null
   state?: string | null
   lga?: string | null
-  profile_image?: string | null   // ← added
 }
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -25,15 +24,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Mobile detection & sidebar collapse
+  // -----------------------------------------------------------------
+  // Mobile detection & sidebar collapse 
+  // -----------------------------------------------------------------
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 1024
-      setIsMobile(mobile)
       setIsSidebarCollapsed(mobile)
     }
 
@@ -58,13 +58,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       const { data: profileRow, error: profileError } = await supabase
         .from('profiles')
-        .select('first_name, last_name, role, phone, residential_address, state, lga, profile_image')
+        .select('first_name, last_name, role, phone, residential_address, state, lga')
         .eq('id', user.id)
         .maybeSingle()
-
-      if (profileError) {
-        console.error('Profile fetch error:', profileError)
-      }
 
       let fullName = 'User'
       let role: string | null = null
@@ -72,7 +68,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       let residential_address: string | null = null
       let state: string | null = null
       let lga: string | null = null
-      let profile_image: string | null = null
+
+      if (profileError) {
+        console.error('Profile fetch error:', profileError)
+      }
 
       if (profileRow) {
         fullName = [profileRow.first_name, profileRow.last_name]
@@ -85,7 +84,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         residential_address = profileRow.residential_address ?? null
         state = profileRow.state ?? null
         lga = profileRow.lga ?? null
-        profile_image = profileRow.profile_image ?? null
       }
 
       setProfile({
@@ -96,7 +94,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         residential_address,
         state,
         lga,
-        profile_image,
       })
     } catch (err) {
       console.error('Unexpected error in fetchProfile:', err)
@@ -109,7 +106,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchProfile()
 
-    // Listen for auth changes + profile updates
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         fetchProfile()
@@ -119,29 +115,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       }
     })
 
-    // Optional: Realtime subscription to profiles table (updates avatar instantly when changed)
-    const channel = supabase
-      .channel('profiles-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'profiles',
-          filter: `id=eq.${supabase.auth.getUser().then(r => r.data.user?.id)}`,
-        },
-        (payload) => {
-          if (payload.new.profile_image) {
-            setProfile(prev => prev ? { ...prev, profile_image: payload.new.profile_image } : null)
-          }
-        }
-      )
-      .subscribe()
-
-    return () => {
-      subscription.unsubscribe()
-      supabase.removeChannel(channel)
-    }
+    return () => subscription.unsubscribe()
   }, [router])
 
   // Close dropdown on outside click
@@ -160,9 +134,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     router.push('/login')
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      setIsSidebarCollapsed(mobile);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
   const displayName = isLoading ? 'Loading...' : profile?.full_name || 'User'
   const displayEmail = isLoading ? 'Loading...' : profile?.email || 'No email provided'
-  const avatarUrl = profile?.profile_image || '/default-avatar.png'
 
   return (
     <div className="flex min-h-screen">
@@ -185,15 +171,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               aria-label="User profile"
             >
-              <div className="h-8 w-8 rounded-full bg-[var(--white)] overflow-hidden relative">
-                <Image
-                  src={avatarUrl}
-                  alt="Profile photo"
-                  fill
-                  className="object-cover"
-                  sizes="32px"
-                  priority // small avatar – better to load fast
-                />
+              <div className="h-8 w-8 rounded-full bg-[var(--white)] overflow-hidden">
+                <Image src="/user.png" width={32} height={32} alt="User avatar" />
               </div>
 
               {!isMobile && <span className="text-sm font-medium">{displayName}</span>}
