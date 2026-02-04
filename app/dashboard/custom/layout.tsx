@@ -225,7 +225,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             )}
           </div>
            </header>
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 ">
           {/* Spacer for mobile header area */}
           <div className="md:hidden h-16" />
           {children}

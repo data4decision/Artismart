@@ -27,8 +27,8 @@ const logout = () => {
 }
 
 const nav = [
-  { label: 'Dashboard', href: '/dashboard/customer', icon: FaTachometerAlt },
-  { label: 'Profile', href: '/dashboard/customer/profile', icon: FaUser },
+  { label: 'Dashboard', href: '/dashboard/custom', icon: FaTachometerAlt },
+  { label: 'Profile', href: '/dashboard/custom/profile', icon: FaUser },
   { label: 'Browse Artisans', href: '/dashboard/customer/artisans', icon: FaSearch },
   { label: 'My Bookings', href: '/dashboard/customer/bookings', icon: FaClipboardList },
   { label: 'Booking Requests', href: '/dashboard/customer/requests', icon: FaBriefcase },
@@ -51,7 +51,7 @@ export default function Sidebar() {
     <>
       {/* Mobile hamburger button */}
       <button
-        className="md:hidden fixed top-4 right-4 z-50 bg-white p-3 rounded-full shadow-lg border border-gray-200"
+        className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 text-[var(--blue)] rounded-full shadow-lg border border-[var(--orange)]"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label="Toggle menu"
       >
@@ -60,7 +60,9 @@ export default function Sidebar() {
 
       {/* Sidebar – fixed on desktop, drawer on mobile */}
       <aside
-       className={`fixed top-0 left-0 h-screen bg-[var(--blue)] text-[var(--white)] flex flex-col z-40 transition-all duration-300 `}
+      
+       className={`fixed md:static inset-y-0 top-0 left-0 h-screen bg-[var(--blue)] text-[var(--white)] flex flex-col z-40 transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:translate-x-0 `}
        aria-label="Customer sidebar"
      >
         <div className="px-4 h-16 flex items-center gap-2 font-semibold border-b border-[var(--orange)]">
@@ -103,7 +105,7 @@ export default function Sidebar() {
       {/* Overlay when mobile menu is open */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden transition-opacity duration-300"
+          className="fixed inset-0   z-30 md:hidden transition-opacity duration-300"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}

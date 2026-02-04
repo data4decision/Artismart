@@ -150,7 +150,8 @@ const Page = () => {
       if (error) throw error
 
       toast.success('Logged out from all devices!')
-      // Optional: window.location.href = '/login'
+      // Optional: force redirect after global sign out
+      // window.location.href = '/login'
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to log out'
       toast.error(message)
