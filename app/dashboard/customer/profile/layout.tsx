@@ -1,4 +1,4 @@
-
+'use client'  // ← Add this line here (must be first, before any imports or code)
 
 import React, { useState } from 'react'
 import Link from 'next/link'
@@ -30,7 +30,7 @@ const navItems = [
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
-export const dynamic = 'force-dynamic'
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -41,43 +41,41 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Mobile hamburger button */}
       <button
-        className="md:hidden  top-8 right-12 z-50 bg-white p-2 rounded-lg shadow-md"
+        className="md:hidden fixed top-4 right-4 z-50 bg-white p-3 rounded-full shadow-lg border border-gray-200"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label="Toggle menu"
       >
-        {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+        {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
       </button>
 
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] min-h-screen">
         {/* Sidebar – fixed on desktop, drawer on mobile */}
         <aside
           className={`
-            fixed md:static inset-y-0 left-0 z-40 w-52 bg-[var(--white)] border-[var(--blue)] hover:border-[var(--blue)] text-[var(--blue)]
+            fixed md:static inset-y-0 left-0 z-40 w-64 md:w-72 bg-white border-r border-gray-200
             transform transition-transform duration-300 ease-in-out
             ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
             md:translate-x-0
           `}
         >
-          {/* <div className="p-6 border-b border-orange-600">
-            <h2 className="text-xl font-bold">Menu</h2>
-          </div> */}
-
-          <nav className="mt-4 px-3">
-            <ul className="space-y-1">
-              {navItems.map(({ href,  label }) => (
+          <nav className="mt-16 md:mt-6 px-3">
+            <ul className="space-y-1.5">
+              {navItems.map(({ href, label, icon: Icon }) => (
                 <li key={href}>
                   <Link
                     href={href}
-                    onClick={() => setIsMobileMenuOpen(false)} 
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className={`
-                      flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm
-                      ${isActive(href)
-                        ? 'bg-[var(--orange)]/20 font-semibold border border-[var(--orange)]'
-                        : 'hover:bg-[var(--blue)]/10 border border-[var(--blue)]'}
+                      flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-200 text-[15px]
+                      ${
+                        isActive(href)
+                          ? 'bg-orange-50 text-orange-700 font-medium shadow-sm border border-orange-200'
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+                      }
                     `}
                   >
-                    {/* <Icon className="text-lg shrink-0" /> */}
-                    <span>{label}</span>
+                    {Icon && <Icon className="text-lg shrink-0 opacity-80" />}
+                    <span className="truncate">{label}</span>
                   </Link>
                 </li>
               ))}
@@ -87,7 +85,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Main content area */}
         <main className="flex-1 p-4 md:p-6 lg:p-8">
-          {/* Optional top padding for mobile when menu is closed */}
+          {/* Spacer for mobile header area */}
           <div className="md:hidden h-16" />
           {children}
         </main>
@@ -96,11 +94,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Overlay when mobile menu is open */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-30 md:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden transition-opacity duration-300"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
     </div>
   )
 }
-
