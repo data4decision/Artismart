@@ -4,14 +4,8 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  FaTachometerAlt,
-  FaUser,
-  FaSearch,
-  FaBriefcase,
-  FaClipboardList,
-  FaComments,
-  FaCreditCard,
-  FaStar,
+  
+  
   FaBars,
   FaTimes,
 } from 'react-icons/fa'
@@ -23,8 +17,8 @@ const navItems = [
   { label: 'Security & Privacy', href: '/profile/customer/bookings' },
   { label: 'Saved Artisans / Favorites', href: '/profile/customer/requests' },
   { label: 'Payment Information', href: '/profile/customer/messages' },
-  { label: 'Account Status', href: '/profile/customer/payments', icon: FaCreditCard },
-  { label: 'Account Actions', href: '/profile/customer/reviews', icon: FaStar },
+  { label: 'Account Status', href: '/profile/customer/payments' },
+  { label: 'Account Actions', href: '/profile/customer/reviews' },
 ]
 
 interface DashboardLayoutProps {

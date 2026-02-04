@@ -58,7 +58,7 @@ export default function Login() {
       if (role === 'artisan') {
         router.push('/dashboard/artisan');
       } else {
-        router.push('/dashboard/customer');
+        router.push('/dashboard/custom');
       }
     } catch (err: unknown) {
       const message = (err as Error)?.message || 'Invalid email or password';
