@@ -3,10 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Cropper, { Area } from 'react-easy-crop'
-import { supabase } from '@/lib/supabase'
 import { FaCamera, FaUserEdit, FaSave, FaTimes } from 'react-icons/fa'
 import toast from 'react-hot-toast'
-
 
 import getCroppedImg from '@/utils/getCroppedImg'  
 
@@ -43,9 +41,16 @@ const ProfilePage = () => {
   const [croppedPreview, setCroppedPreview] = useState<string | null>(null)
 
   useEffect(() => {
+    let mounted = true
+
     const fetchProfile = async () => {
+      if (!mounted) return
+
       try {
         setIsLoading(true)
+
+        // Dynamic import – only executes in the browser
+        const { supabase } = await import('@/lib/supabase')
 
         const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -92,26 +97,38 @@ const ProfilePage = () => {
           lga: data.lga || '',
         })
         setPreviewUrl(data.profile_image || null)
-
       } catch (err) {
         console.error('[Profile] Unexpected error:', err)
         toast.error('Something went wrong while loading profile')
       } finally {
-        setIsLoading(false)
+        if (mounted) setIsLoading(false)
       }
     }
 
     fetchProfile()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session?.user) fetchProfile()
-      else {
-        setProfile(null)
-        setIsLoading(false)
-      }
-    })
+    // Auth state listener with dynamic import
+    let unsubscribe: (() => void) | null = null
 
-    return () => subscription.unsubscribe()
+    const setupListener = async () => {
+      const { supabase } = await import('@/lib/supabase')
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+        if (session?.user) {
+          fetchProfile()
+        } else {
+          setProfile(null)
+          setIsLoading(false)
+        }
+      })
+      unsubscribe = () => subscription.unsubscribe()
+    }
+
+    setupListener()
+
+    return () => {
+      mounted = false
+      if (unsubscribe) unsubscribe()
+    }
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +180,9 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Dynamic import
+    const { supabase } = await import('@/lib/supabase')
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
@@ -219,9 +239,11 @@ const ProfilePage = () => {
 
     if (updateError) {
       console.error('Update failed:', updateError)
-      toast.error(updateError.message.includes('permission') 
-        ? 'Permission denied – check RLS' 
-        : 'Failed to save changes')
+      toast.error(
+        updateError.message.includes('permission')
+          ? 'Permission denied – check RLS'
+          : 'Failed to save changes'
+      )
       return
     }
 
@@ -249,7 +271,7 @@ const ProfilePage = () => {
     return (
       <div className="max-w-2xl mx-auto text-center py-16">
         <h2 className="text-2xl font-bold text-[var(--blue)] mb-4">
-          Welcome! Let set up your profile
+          Welcome! Let's set up your profile
         </h2>
         <p className="text-[var(--blue)] mb-8 max-w-md mx-auto">
           Click <span className="font-bold">Edit Profile</span> below to add your information.
@@ -374,7 +396,7 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              {/* ── Image Cropper Section ── */}
+              {/* Image Cropper Section */}
               {previewUrl && (
                 <div className="mt-8 border-t pt-6">
                   <label className="block text-sm font-medium text-[var(--blue)] mb-3">
