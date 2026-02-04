@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link' // ← use this instead of <a href>
+import Link from 'next/link'
+import {supabase} from '@/lib/supabase'
 
 // Define the shape of the profile
 interface Profile {
@@ -25,8 +26,7 @@ export default function CustomerDashboard() {
       try {
         setIsLoading(true)
 
-        // Dynamic import to avoid build-time Supabase issues
-        const { supabase } = await import('@/lib/supabase')
+
 
         const { data: { user } } = await supabase.auth.getUser()
 
