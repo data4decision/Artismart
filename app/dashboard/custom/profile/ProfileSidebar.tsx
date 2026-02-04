@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { FaBars, FaTimes } from 'react-icons/fa'
 
 
 const navItems = [
@@ -44,7 +45,7 @@ export default function ProfileSidebar() {
       >
         <nav className="mt-16 md:mt-6 px-3">
           <ul className="space-y-1.5">
-            {navItems.map(({ href, label, icon: Icon }) => (
+            {navItems.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
@@ -58,7 +59,7 @@ export default function ProfileSidebar() {
                     }
                   `}
                 >
-                  {Icon && <Icon className="text-lg shrink-0 opacity-80" />}
+                  
                   <span className="truncate">{label}</span>
                 </Link>
               </li>
