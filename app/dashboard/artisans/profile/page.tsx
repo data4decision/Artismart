@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { supabase } from '@/lib/supabase'
+import { RealtimeChannel } from '@supabase/supabase-js'  // ← ensures type is available
 
 import ProfileHeader from '@/components/artisan-profile/ProfileHeader'
 import ProfileEditForm from '@/components/artisan-profile/ProfileEditForm'
@@ -51,7 +52,7 @@ export default function ArtisanProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
-    let channel: unknown = null
+    let channel: RealtimeChannel | null = null  // ← correct type (not any or unknown)
 
     const setupProfile = async () => {
       setIsLoading(true)
@@ -116,7 +117,7 @@ export default function ArtisanProfilePage() {
 
     return () => {
       if (channel) {
-        supabase.removeChannel(channel)
+        supabase.removeChannel(channel)  // ← types correctly now
       }
     }
   }, [])
@@ -172,7 +173,7 @@ export default function ArtisanProfilePage() {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <h2 className="text-2xl font-bold text-[var(--blue)]">About</h2>
                 <VerificationBadge 
-                  status={profile?.verification_status ?? null}   // ← FIXED HERE
+                  status={profile?.verification_status ?? null}
                 />
               </div>
               <BioSection bio={profile?.bio} />
