@@ -30,17 +30,17 @@ const logout = () => {
 }
 
 const nav = [
-  { label: 'Dashboard', href: '/dashboard/artisan', icon: FaTachometerAlt },
-  { label: 'Profile', href: '/dashboard/artisan/profile', icon: FaUser },
-  { label: 'Verification', href: '/dashboard/artisan/verification', icon: FaIdCard },
-  { label: 'Job Requests', href: '/dashboard/artisan/requests', icon: FaBriefcase },
-  { label: 'Active Jobs', href: '/dashboard/artisan/jobs', icon: FaTasks },
-  { label: 'Messages', href: '/dashboard/artisan/messages', icon: FaComments },
-  { label: 'Earnings', href: '/dashboard/artisan/earnings', icon: FaWallet },
-  { label: 'Reviews', href: '/dashboard/artisan/reviews', icon: FaStar },
-  { label: 'Availability', href: '/dashboard/artisan/availability', icon: FaCalendarAlt },
-  { label: 'Notifications', href: '/dashboard/artisan/notifications', icon: FaBell },
-  { label: 'Support', href: '/dashboard/artisan/support', icon: FaLifeRing },
+  { label: 'Dashboard', href: '/dashboard/artisans', icon: FaTachometerAlt },
+  { label: 'Profile', href: '/dashboard/artisans/profile', icon: FaUser },
+  { label: 'Verification', href: '/dashboard/artisans/verification', icon: FaIdCard },
+  { label: 'Job Requests', href: '/dashboard/artisans/requests', icon: FaBriefcase },
+  { label: 'Active Jobs', href: '/dashboard/artisans/jobs', icon: FaTasks },
+  { label: 'Messages', href: '/dashboard/artisans/messages', icon: FaComments },
+  { label: 'Earnings', href: '/dashboard/artisans/earnings', icon: FaWallet },
+  { label: 'Reviews', href: '/dashboard/artisans/reviews', icon: FaStar },
+  { label: 'Availability', href: '/dashboard/artisans/availability', icon: FaCalendarAlt },
+  { label: 'Notifications', href: '/dashboard/artisans/notifications', icon: FaBell },
+  { label: 'Support', href: '/dashboard/artisans/support', icon: FaLifeRing },
 ];
 
 export default function Sidebar() {
@@ -55,7 +55,7 @@ export default function Sidebar() {
     <>
       {/* Mobile hamburger button */}
       <button
-        className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 text-[var(--blue)] rounded-full shadow-lg border border-[var(--orange)]"
+        className="md:hidden fixed top-0 left-4 z-50 bg-white p-2 text-[var(--blue)] rounded-full shadow-lg border border-[var(--orange)]"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label="Toggle menu"
       >

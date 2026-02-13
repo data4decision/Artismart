@@ -403,17 +403,17 @@ export default function SignUp() {
         ) : (
           <div className="mt-8 space-y-6 text-center text-[var(--white)]">
             <h3 className="text-xl font-semibold">Verify your email</h3>
-            <p>
+            <p className='text-[var(--white)]'>
               We sent a confirmation link to <strong>{formData.email}</strong>
             </p>
-            <p className="text-sm opacity-80">
+            <p className="text-sm opacity-80 text-[var(--white)]">
               Please check your inbox (and spam/junk folder) and click the link to verify your account.
             </p>
 
             <button
               type="button"
               onClick={() => setStep('form')}
-              className="mt-4 px-4 py-2 rounded-md text-[var(--blue)] bg-white/10 hover:bg-white/20"
+              className="mt-4 px-4 py-2 rounded-md text-[var(--blue)] bg-[var(--white)] hover:bg-bg-[var(--white)]/20"
             >
               Back to form
             </button>
