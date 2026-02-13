@@ -29,7 +29,7 @@ async function getArtisans(searchParams: Record<string, string | string[] | unde
       -- next_available_date
     `)
     .eq('is_active', true)                          
-    .order('average_rating', { ascending: false, nullsLast: true });
+    .order('average_rating', { ascending: false });  // ← FIXED: removed invalid nullsLast
 
   // Search – searching across name, business, primary skill
   if (searchParams.search && typeof searchParams.search === 'string') {
@@ -57,12 +57,12 @@ async function getArtisans(searchParams: Record<string, string | string[] | unde
   //   query = query.eq('availability_status', searchParams.availability as string);
   // }
 
-  // Sorting
+  // Sorting overrides
   if (searchParams.sort === 'jobs') {
-    query = query.order('completed_jobs_count', { ascending: false, nullsLast: true });
+    query = query.order('completed_jobs_count', { ascending: false });  // also removed nullsLast — default works
   } else if (searchParams.sort === 'recent') {
     // Assuming you add last_active_at later
-    // query = query.order('last_active_at', { ascending: false, nullsLast: true });
+    // query = query.order('last_active_at', { ascending: false });
     // For now fallback to rating or created_at
   }
 
