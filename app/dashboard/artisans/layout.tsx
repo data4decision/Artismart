@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState, useRef, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Sidebar from './Sidebar'
@@ -6,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FaCaretDown, FaCog, FaSignOutAlt, FaUser } from 'react-icons/fa'
 import { supabase } from '@/lib/supabase'
+import { RealtimeChannel } from '@supabase/supabase-js'
 
 interface Profile {
   full_name: string | null
@@ -127,7 +129,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     })
 
     // Realtime profile changes
-    let profileChannel: unknown = null
+    let profileChannel: RealtimeChannel | null = null
 
     const setupRealtime = async () => {
       const { data: { user } } = await supabase.auth.getUser()
@@ -157,14 +159,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       fetchProfile()
     }
 
-  
     window.addEventListener('focus', handleRouteChange)
 
     return () => {
       authSubscription.unsubscribe()
+
       if (profileChannel) {
         supabase.removeChannel(profileChannel)
       }
+
       window.removeEventListener('focus', handleRouteChange)
     }
   }, [pathname])
@@ -175,10 +178,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="font-roboto flex flex-col h-screen">
-     
       <header className="fixed top-0 left-0 right-0 z-30 h-16 flex items-center justify-between px-4 sm:px-6 border-b border-[var(--orange)]/80 bg-[var(--blue)] text-[var(--white)] shadow-sm">
         <h1 className="text-lg font-semibold sm:ml-0 ml-10 md:ml-64">
-       
+          {/* You can add a title here if desired */}
         </h1>
 
         <div className="relative" ref={dropdownRef}>
@@ -243,13 +245,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </header>
 
-     
       <div className="flex flex-1 pt-16 overflow-hidden">
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto bg-gray-50/70">
           <div className="min-h-full p-4 md:p-6 lg:p-8">
-            
             <div className="md:hidden h-4" />
             {children}
           </div>
