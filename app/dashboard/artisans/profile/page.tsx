@@ -42,7 +42,7 @@ interface ArtisanProfile {
   working_days: string | null
   available_time_slots: string | null
   next_available_date: string | null
-  portfolio_items: PortfolioItem[] | null   // ← Fixed: array, not string
+  portfolio_items: PortfolioItem[] | null
 }
 
 export default function ArtisanProfilePage() {
@@ -51,7 +51,7 @@ export default function ArtisanProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
-    let channel: any = null
+    let channel: unknown = null
 
     const setupProfile = async () => {
       setIsLoading(true)
@@ -77,9 +77,6 @@ export default function ArtisanProfilePage() {
           .maybeSingle()
 
         if (error) throw error
-
-        // Optional: log to confirm data shape during development
-        // console.log('Loaded portfolio_items:', data?.portfolio_items)
 
         setProfile(data)
 
@@ -174,7 +171,9 @@ export default function ArtisanProfilePage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <h2 className="text-2xl font-bold text-[var(--blue)]">About</h2>
-                <VerificationBadge status={profile?.verification_status} />
+                <VerificationBadge 
+                  status={profile?.verification_status ?? null}   // ← FIXED HERE
+                />
               </div>
               <BioSection bio={profile?.bio} />
             </div>
