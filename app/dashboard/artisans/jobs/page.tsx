@@ -1,4 +1,3 @@
-// app/dashboard/artisan/bookings/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -15,6 +14,7 @@ import {
   FaMoneyBillWave,
   FaBell 
 } from 'react-icons/fa'
+import React from 'react'   // ← added (needed for React.JSX.Element)
 
 // ────────────────────────────────────────────────
 // Types
@@ -34,6 +34,8 @@ interface Booking {
   total_amount: number | null
   notes: string | null
   created_at: string
+  // If you later add paid_at field (used in stats):
+  // paid_at: string | null
 }
 
 interface Stats {
@@ -47,10 +49,10 @@ interface Stats {
 // ────────────────────────────────────────────────
 // Status Colors & Icons
 // ────────────────────────────────────────────────
-const statusStyles: Record<BookingStatus, { bg: string; text: string; icon: JSX.Element }> = {
+const statusStyles: Record<BookingStatus, { bg: string; text: string; icon: React.JSX.Element }> = {
   pending:    { bg: 'bg-amber-100',     text: 'text-amber-700', icon: <FaHourglassHalf /> },
   confirmed:  { bg: 'bg-blue-100',      text: 'text-blue-700',  icon: <FaCalendarAlt /> },
-  in_progress:{ bg: 'bg-purple-100',    text: 'text-purple-700',icon: <FaClock /> },
+  in_progress:{ bg: 'bg-purple-100',    text: 'text-purple-700', icon: <FaClock /> },
   completed:  { bg: 'bg-green-100',     text: 'text-green-700', icon: <FaCheckCircle /> },
   cancelled:  { bg: 'bg-red-100',       text: 'text-red-700',   icon: <FaTimesCircle /> },
 }
@@ -92,7 +94,7 @@ export default function ArtisanBookingsPage() {
 
         setBookings(bookingsData || [])
 
-        // ── Simple stats calculation (you can move to RPC / edge function) ──
+        // ── Simple stats calculation ──
         const today = new Date()
         today.setHours(0, 0, 0, 0)
 
@@ -118,10 +120,18 @@ export default function ArtisanBookingsPage() {
           }
 
           if (jobDate.toDateString() === today.toDateString()) todayJobs++
-          if (jobDate > today || (jobDate.toDateString() === today.toDateString() && b.status !== 'completed')) {
+          
+          // Upcoming = future days OR today but not completed
+          if (jobDate > today || 
+              (jobDate.toDateString() === today.toDateString() && b.status !== 'completed')) {
             upcomingJobs++
           }
-          if (b.status === 'completed' && !b.paid_at) pendingPayments += b.total_amount || 0
+
+          // Pending payments — assuming you have a paid_at column
+          // If not, remove or adjust this condition
+          if (b.status === 'completed' && !b.paid_at) {
+            pendingPayments += b.total_amount || 0
+          }
         })
 
         setStats({
@@ -141,14 +151,14 @@ export default function ArtisanBookingsPage() {
 
     fetchBookingsAndStats()
 
-    // Optional: realtime updates
+    // Realtime subscription (optional)
     const channel = supabase
       .channel('bookings-changes')
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'bookings' },
-        (payload) => {
-          console.log('Booking changed:', payload)
-          fetchBookingsAndStats() // simple re-fetch (or merge payload)
+        () => {
+          // For simplicity — full refresh
+          fetchBookingsAndStats()
         }
       )
       .subscribe()
@@ -309,7 +319,7 @@ export default function ArtisanBookingsPage() {
 // ────────────────────────────────────────────────
 // Reusable Components
 // ────────────────────────────────────────────────
-function StatCard({ title, value, icon }: { title: string; value: string; icon: JSX.Element }) {
+function StatCard({ title, value, icon }: { title: string; value: string; icon: React.JSX.Element }) {
   return (
     <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
       <div className="flex items-center justify-between">
