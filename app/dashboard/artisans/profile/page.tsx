@@ -9,8 +9,8 @@ import ProfileEditForm from '@/components/artisan-profile/ProfileEditForm'
 import BioSection from '@/components/artisan-profile/BioSection'
 import RatingDisplay from '@/components/artisan-profile/RatingDisplay'
 import VerificationBadge from '@/components/artisan-profile/VerificationBadge'
-import SkillsSection from '@/components/artisan-profile/SkillsSection'
-import AvailabilitySection from '@/components/artisan-profile/AvailabilitySection'
+// import SkillsSection from '@/components/artisan-profile/SkillsSection'
+// import AvailabilitySection from '@/components/artisan-profile/AvailabilitySection'
 import PortfolioSection from '@/components/artisan-profile/PortfolioSection'
 import ReviewSection from '@/components/artisan-profile/ReviewSection'
 
@@ -187,13 +187,13 @@ export default function ArtisanProfilePage() {
               />
             </div>
 
-            <SkillsSection skills={profile?.skills} />
+            {/* <SkillsSection skills={profile?.skills} />
 
             <AvailabilitySection
               workingDays={profile?.working_days}
               timeSlots={profile?.available_time_slots}
               nextAvailable={profile?.next_available_date}
-            />
+            /> */}
 
             {/* Portfolio – safe fallback to empty array */}
             <PortfolioSection 
